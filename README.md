@@ -20,9 +20,10 @@ Tracking result on each benchmark is available at  https://pan.baidu.com/s/1bItn
 | FPS | 141.5 | 306.5 | 319.9 |
 
 ## Guide for FDSiamFC'S Training and Tracking.
-### Create virtual enviroment
+### Compress SiamFC to get FDSiamFC
+#### Create virtual enviroment
 The packages neeeded for FDSiamFC is avilable at requirement.txt. For RTX30 or laster GPU you may need to use pytorch1.7 or laster. I recomand you to use Pytorch1.9 instead of 1.7 since 1.7 does not well compatible with Group convolutional and big kernel convolutional(like 5×5 convolutional kernel).
-### Preprocess on the training dataset.
+#### Preprocess on the training dataset.
 You may take ILSVRC15, GOT10K, TrackingNet as the training dataset of FDSiamFC (In our work we only use GOT10K as the training dataset)
 go to './tools/crop_train_dataset_got10k.py'
 modify the 'got10k_dir' and 'cropped_data_dir' in line 111 and line 112.
@@ -34,7 +35,7 @@ Run
 It will take 2 hours to crope the whole training dataset.
 After cropped the training dataset, you may need a meta data file. you can generate it by youself fallow the codes in './siamfc/datasets.py' line 25-46 or download it from :https://pan.baidu.com/s/1BDiYbmL-iSOQ866yCRHR8A  key 20td. 
 
-### Training FDSiamFC.
+#### Training FDSiamFC.
 The FDSiamFC is compressing the FDSiamFC layer by layer throught FD module. On each layer we will test the compressed model on OTB2013 dataset and chose a suitable model for the next compressing step. So, you may neet to download the OTB2013 dataset and set the folder path in './tools/fdModel_evaluate.py' line 21. You may use other benchmark to evaluate the compressed model insted.
 Go to './tools/train_FDSiamFC.py'
 modify the 'root_dir' in line 16.
@@ -43,10 +44,13 @@ run
   train_FDSiamFC.py
 It may take 20 hours to compress the whole SiamFC. During the compressing process, the compress result will printed in './tools/train_log.txt'.
 
-# Transform the compressed model.
+#### Transform the compressed model.
 After the traning process, the FD model's encode layer successfully learn the couplling relatinship between the convolutional kernels in each layer. Now we need to used these relationship to decoupling the convolutional kernels.
-Go to './tools/model_transform_high_precision.py'
-modify the 'model_path' in line 54. (the best compressed model file path is avilable at the train_log.txt file you can directly copy the path)
+Go to './tools/model_transform_high_precision.py' (note that: './tools/The model_transform.py' achieves same function but possibly loss precision)
+modify the 'model_path' in line 54. (the best compressed model file path is avilable at the train_log.txt file you can directly copy the path on the train log)
+run
+  model_transform_hight_precision.py
+The decoupled model will be avilable at './tool/transformed_model.pth'. Now the train process is over and we have successfully compress the SiamFC into FDSiamFC.
 
 
 
