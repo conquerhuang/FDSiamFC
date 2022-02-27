@@ -25,33 +25,53 @@ Tracking result on each benchmark of FDSiamFC is available at  https://pan.baidu
 The packages neeeded for FDSiamFC is avilable at requirement.txt. For RTX30 or laster GPU you may need to use pytorch1.7 or laster. I recomand you to use Pytorch1.9 instead of 1.7 since 1.7 does not well compatible with Group convolutional and big kernel convolutional(like 5×5 convolutional kernel).
 #### Preprocess on the training dataset.
 You may take ILSVRC15, GOT10K, TrackingNet as the training dataset of FDSiamFC (In our work we only use GOT10K as the training dataset)
+
 go to  './tools/crop_train_dataset_got10k.py'
+
 modify the 'got10k_dir' and 'cropped_data_dir' in line 111 and line 112.
+
 got10k_dir is the folder where you store the GOT10K dataset.
+
 cropped_data_dir is the folder you want to store the cropped training datasets.
+
 you may need 30 GB free space to store the cropped training datasets. NVME SSD is stronglly recomand, it may faster you training process more than 10×.
 Run
-  crop_train_dataset_got10k.py
+
+    crop_train_dataset_got10k.py
+    
 It will take 2 hours to crope the whole training dataset, it depends on you device.(ref: xeon E5 2697 v3 qs 1.4 hours)
+
 Note that: we use multiprocessing toolbox to accelerate the cropping process. If any error occur during the corpping process, you may decrease the process number in line 174 or use single process in line 180.
+
 After cropped the training dataset, you may need a meta data file. you can generate it by youself fallow the codes in './siamfc/datasets.py' line 25-46 or download it from :https://pan.baidu.com/s/1BDiYbmL-iSOQ866yCRHR8A  key 20td. 
 
 #### Training FDSiamFC.
 The FDSiamFC is get by compressing the SiamFC layer by layer throught FD module. On each layer we will test the compressed model on OTB2013 dataset and chose a suitable model for the next compressing step. So, you may neet to download the OTB2013 dataset and set the folder path in './tools/fdModel_evaluate.py' line 21. You may use other benchmark to evaluate the compressed model insted.
+
 Go to './tools/train_FDSiamFC.py'
+
 modify the 'root_dir' in line 16.
+
 root_dir is the path where you stored the cropped training dataset.
+
 run
-  train_FDSiamFC.py
+
+    train_FDSiamFC.py
+
 It may take 20 hours to compress the whole SiamFC, it depend on you device (ref:i7-9700k, RTX 3080ti 17 hour, 16GB RAM). During the compressing process, the compress result in each convolutional layer will printed in './tools/train_log.txt'. From the train log file you can watch the currently compressing result.
 
 #### Transform the compressed model.
 After the traning process, the FD model's encode layer successfully learn the couplling relatinship between the convolutional kernels in each layer. Now we need to used these relationship to decoupling the convolutional kernels.
+
 Go to './tools/model_transform_high_precision.py' 
+
 (note that: './tools/The model_transform.py' achieves same function but possibly loss precision)
+
 modify the 'model_path' in line 54. (the best compressed model file path is avilable at the train_log.txt file you can directly copy the path on the train log)
 run
-  model_transform_hight_precision.py
+
+    model_transform_hight_precision.py
+
 The decoupled model will be avilable at './tool/transformed_model.pth'. Now the train process is over and we have successfully compress the SiamFC into FDSiamFC.
 
 ### Tracking with FDSiamFC
@@ -59,28 +79,44 @@ The decoupled model will be avilable at './tool/transformed_model.pth'. Now the 
 After the training process we get the final decoupled model in './tool/transformed_model.pth'. If you only want to Tracking with FDSiamFC without training. You can directly download the pretrained model from :https://pan.baidu.com/s/11Djj0Rv06lHI_S7OM1hvzQ key:ef05 
 #### Tracking a single video sequence
 Go to './tools/demo.py'
+
 modify the video path you wanna to track. In the demo, we give a video sequence with OTB format. you can change the input parameters in the tracker.track() to track any video sequence you want.
+
 modify the squeeze_rate parameter in line 20. If you use the trained model by you self, you should set the Sq parameter similar to './tools/train_FDSiamFC.py' in line 19. 
 If you use the downloaded model. You shall set as fallow:
+
 'transformed_model_15.pth' → squeeze_rate = [0.15,  0.15, 0.15, 0.15, 0.15]  or
+
 'transformed_model_30.pth' → squeeze_rate = [0.3,  0.3, 0.3, 0.3, 0.3]
+
 If you pytorch version is eralier than 1.7 you should use the model with '\_old\_torch' in its name. Or the torch pytoolbox could not load the pretrained model.
 run
-  demo.py
+
+    demo.py
+
 Enjoy the tracking process!
 
 ### Test on tracking benchmark.
 We offer a test file for you to test the trained FDSiamFC on multiple benchmark. You should install the got10k toolbox by 
-  pip install got10k
+
+    pip install got10k
+
 or directly download it from got10k websit and add it to this project.
+
 Go to './tools/test.py'
+
 Modify the model_path in line 67 and set the squeeze_rate identical to your model. If you use the downloaded model fallow the setting in 'Tracking a single video sequence'.
 Run
-  test.py
+
+    test.py
+
 Wait the got10k toolbox. It may take 5-10 minutes to evaluate FDSiamFC. you can choose other Benchmarks to evaluate FDSiamFC by setting the experiments in line 16.
 
 ### You may concat with us
-We do not repeat the training process to select a better model, or finetune the hyperparameters to fit in the Tracking Benchmark. All the hyperparameters in './siamfc/fdsiamfc.py' line 82 is identical to the hyperparameters seted in SiamFC. So in some cases you may get a model achieves better result than we offered. We hope our FDSiamFC may help you deploy deep tracker on mobile device or edage device. If you have any problem, you can concat with us
+
+We do not repeat the training process to select a better model, or finetune the hyperparameters to fit in the Tracking Benchmark. All the hyperparameters in './siamfc/fdsiamfc.py' line 82 is identical to the hyperparameters seted in SiamFC. So in some cases you may get a model achieves better result than we offered. We hope our FDSiamFC may help you deploy deep tracker on mobile device or edage device. 
+
+If you have any problem, you can concat with us
 email hanlinhuang@stu.xidian.edu.cn
 
 
