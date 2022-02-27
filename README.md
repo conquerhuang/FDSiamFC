@@ -20,7 +20,7 @@ Tracking result on each benchmark is available at  https://pan.baidu.com/s/1bItn
 | FPS | 141.5 | 306.5 | 319.9 |
 
 ## Guide for FDSiamFC'S Training and Tracking.
-### Compress SiamFC to get FDSiamFC
+### Training FDSiamFC
 #### Create virtual enviroment
 The packages neeeded for FDSiamFC is avilable at requirement.txt. For RTX30 or laster GPU you may need to use pytorch1.7 or laster. I recomand you to use Pytorch1.9 instead of 1.7 since 1.7 does not well compatible with Group convolutional and big kernel convolutional(like 5×5 convolutional kernel).
 #### Preprocess on the training dataset.
@@ -52,8 +52,34 @@ run
   model_transform_hight_precision.py
 The decoupled model will be avilable at './tool/transformed_model.pth'. Now the train process is over and we have successfully compress the SiamFC into FDSiamFC.
 
+### Tracking with FDSiamFC
+#### Get the tracker model
+With the training process we get the final decoupled model in './tool/transformed_model.pth'. If you only want to Tracking with FDSiamFC without training model. You can directly download the pretrained model from :https://pan.baidu.com/s/11Djj0Rv06lHI_S7OM1hvzQ key:ef05 
+#### Tracking a single video sequence
+Go to './tools/demo.py'
+modify the video path you wanna to track. In the demo, we give a video sequence in the OTB format. you can change the input parameters in the tracker.track() te track any video sequence you want.
+modify the squeeze_rate parameter in line 20. If you use the trained model by you self, you should set the Sq parameter similar to './tools/train_FDSiamFC.py' in line 19. 
+If you use the downloaded model. You shall set as fallow:
+'transformed_model_15.pth' → squeeze_rate = [0.15,  0.15, 0.15, 0.15, 0.15]  or
+'transformed_model_30.pth' → squeeze_rate = [0.3,  0.3, 0.3, 0.3, 0.3]
+If you pytorch version is eralier than 1.7 you should use the model with '\_old\_torch' in its name. Or the torch toolbox could not load the pretrained model.
+run
+  demo.py
+Enjoy the tracking process!
 
+### Test on tracking benchmark.
+We offer a test file for you to test the trained FDSiamFC on multiple benchmark. You shoudl install the got10k toolbox by 
+  pip install got10k
+or directly download it from got10k websit.
+Go to './tools/test.py'
+modify the model_path in line 67 and set the squeeze_rate identical to your model. If you use the downloaded model fallow the setting in 'Tracking a single video sequence'.
+Run
+  test.py
+Wait the got10k toolbox. It may take 5-10 minutes to evaluate FDSiamFC. you can choose other Benchmarks to evaluate FDSiamFC by setting the experiments in line 16.
 
+### anything also
+We do not repeat the training process to select a better model, or finetune the hyperparameters to fit in the Tracking Benchmark. All the hyperparameters in './siamfc/fdsiamfc.py' line 82 is identical to the hyperparameters seted in SiamFC. So in some cases you may get a model achieves better result than we offered. We hope our FDSiamFC may help you deploy deep tracker on mobile device or edage device. If you have any problem, you can concat with us
+email hanlinhuang@stu.xidian.edu.cn
 
 
 
