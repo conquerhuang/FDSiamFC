@@ -26,15 +26,15 @@ The packages neeeded for FDSiamFC is avilable at requirement.txt. For RTX30 or l
 #### Preprocess on the training dataset.
 You may take ILSVRC15, GOT10K, TrackingNet as the training dataset of FDSiamFC (In our work we only use GOT10K as the training dataset)
 
-go to  './tools/crop_train_dataset_got10k.py'
+Go to  './tools/crop_train_dataset_got10k.py'
 
-modify the 'got10k_dir' and 'cropped_data_dir' in line 111 and line 112.
+Modify the 'got10k_dir' and 'cropped_data_dir' in line 111 and line 112.
 
 got10k_dir is the folder where you store the GOT10K dataset.
 
 cropped_data_dir is the folder you want to store the cropped training datasets.
 
-you may need 30 GB free space to store the cropped training datasets. NVME SSD is stronglly recomand, it may faster you training process more than 10×.
+You may need 30 GB free space to store the cropped training datasets. NVME SSD is stronglly recomand, it may faster you training process more than 10×.
 Run
 
     crop_train_dataset_got10k.py
@@ -50,11 +50,11 @@ The FDSiamFC is get by compressing the SiamFC layer by layer throught FD module.
 
 Go to './tools/train_FDSiamFC.py'
 
-modify the 'root_dir' in line 16.
+Modify the 'root_dir' in line 16.
 
 root_dir is the path where you stored the cropped training dataset.
 
-run
+Run
 
     train_FDSiamFC.py
 
@@ -67,7 +67,7 @@ Go to './tools/model_transform_high_precision.py'
 
 (note that: './tools/The model_transform.py' achieves same function but possibly loss precision)
 
-modify the 'model_path' in line 54. (the best compressed model file path is avilable at the train_log.txt file you can directly copy the path on the train log)
+Modify the 'model_path' in line 54. (the best compressed model file path is avilable at the train_log.txt file you can directly copy the path on the train log)
 run
 
     model_transform_hight_precision.py
@@ -80,9 +80,9 @@ After the training process we get the final decoupled model in './tool/transform
 #### Tracking a single video sequence
 Go to './tools/demo.py'
 
-modify the video path you wanna to track. In the demo, we give a video sequence with OTB format. you can change the input parameters in the tracker.track() to track any video sequence you want.
+Modify the video path you wanna to track. In the demo, we give a video sequence with OTB format. you can change the input parameters in the tracker.track() to track any video sequence you want.
 
-modify the squeeze_rate parameter in line 20. If you use the trained model by you self, you should set the Sq parameter similar to './tools/train_FDSiamFC.py' in line 19. 
+Modify the squeeze_rate parameter in line 20. If you use the trained model by you self, you should set the Sq parameter similar to './tools/train_FDSiamFC.py' in line 19. 
 If you use the downloaded model. You shall set as fallow:
 
 'transformed_model_15.pth' → squeeze_rate = [0.15,  0.15, 0.15, 0.15, 0.15]  or
@@ -115,6 +115,8 @@ Wait the got10k toolbox. It may take 5-10 minutes to evaluate FDSiamFC. you can 
 ### You may concat with us
 
 We do not repeat the training process to select a better model, or finetune the hyperparameters to fit in the Tracking Benchmark. All the hyperparameters in './siamfc/fdsiamfc.py' line 82 is identical to the hyperparameters seted in SiamFC. So in some cases you may get a model achieves better result than we offered. We hope our FDSiamFC may help you deploy deep tracker on mobile device or edage device. 
+
+The model and source code is trained and developed on Windows plantform (win 10)
 
 If you have any problem, you can concat with us
 email hanlinhuang@stu.xidian.edu.cn
