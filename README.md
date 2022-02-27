@@ -11,5 +11,15 @@
 
 Tracking result on each benchmark is available at  https://pan.baidu.com/s/1bItnRu4Eg7D8U1I5UHWr7A  key: jlii  Include 'txt' and 'mat' format, suitable for got10k toolbox and OTB toolbox respectively.
 
-##
+## Compression results
+| Tracker | SiamFC | FDSiamFC_30 | FDSiamFC_15 |
+| :--- | :---: | :---: | :---: |
+| Model size(MB) | 8.609 | 0.821 | 0.217 |
+| Computional cost GFLOPs | 5.453 | 0.699 | 0.255 |
+| FPS | 141.5 | 306.5 | 319.9 |
+
+## Guide for FDSiamFC'S Training and Tracking.
+
+
+
 
