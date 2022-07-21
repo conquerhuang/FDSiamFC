@@ -1,0 +1,7 @@
+config = {
+    scale_num = 3
+    scale_step = 1.04
+    scale_lr = 0.8
+    scale_penalty = 0.9745
+    window_influence = 0.176
+}
