@@ -12,6 +12,7 @@ In recent years, Siamese-based trackers have shown remarkable improvement in vis
 
 
 ## Compression results.
+the row results are available at: https://pan.baidu.com/s/1Rwy8iATpv2SfH138QUk0Rw?pwd=1hio key: 1hio 
 | Tracker | SiamFC | FDSiamFC_30 | FDSiamFC_15 |
 | :--- | :---: | :---: | :---: |
 | Model size(MB) | 8.609 | 0.821 | 0.217 |
@@ -21,6 +22,9 @@ In recent years, Siamese-based trackers have shown remarkable improvement in vis
 ## Guide for FDSiamFC'S Tracking.
 ### Tracking with FDSiamFC
 #### Tracking a single video sequence
+
+Download the pretrained model at: https://pan.baidu.com/s/1xlf5qmlSGGW0IMUqwduT1g?pwd=dq9o  key:dq9o 
+
 Go to './tools/demo_fdsiamfc.py'
 
 Modify the video path you wanna to track. In the demo, we give a video sequence with OTB format. you can change the input parameters in the tracker.track() to track any video sequence you want.
